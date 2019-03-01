@@ -1,3 +1,20 @@
+'''
+    DeadSimpleKv. An extremely simple key-value storage system with cache
+    Copyright (C) 2019 Kevin Froman
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+'''
 import sys, os, unittest, json, time, math, uuid
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 import deadsimplekv
@@ -32,6 +49,16 @@ class TestInit(unittest.TestCase):
         kv.put('meme', 'doge')
         kv2 = deadsimplekv.DeadSimpleKV(test_id)
         self.assertIsNone(kv2.get('meme'))
+    
+    def test_manual_refresh(self):
+        test_id = get_test_id()        
+        kv = deadsimplekv.DeadSimpleKV(test_id, refresh_seconds=None)
+        kv2 = deadsimplekv.DeadSimpleKV(test_id)
+
+        kv2.put('test', True)
+        self.assertIsNone(kv.get('test'))
+        kv.refresh()
+        self.assertTrue(kv.get('test'))
 
     def test_none(self):
         kv = deadsimplekv.DeadSimpleKV(get_test_id())
