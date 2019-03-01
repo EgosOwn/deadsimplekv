@@ -17,7 +17,7 @@
 '''
 import json, time, math, os
 
-def is_serializable(data):
+def _is_serializable(data):
     try:
         json.dumps(data)
         return True
@@ -40,35 +40,40 @@ class DeadSimpleKV:
         self._last_refresh = temp_time # time last refreshed from disk
         self._last_flush = temp_time # time last flushed to disk
 
-        if os.path.exists(file_path):
-            self.refresh()
+        try:
+            if os.path.exists(file_path):
+                self.refresh()
+        except TypeError:
+            pass
     
     def get(self, key):
-        if self.refresh_seconds is not None and self.file_path is not None:
-            self.refresh()
+        self._do_auto_refresh()
         try:
             return self._data[key]
         except KeyError:
             return None
         
     def put(self, key, value):
-        '''Value setter. Will automatically flush if auto_flush is True and file_path is not None'''
+        '''Value setter. Will automatically flush if auto_flush is True and file_path is not None
+        Will return value error if either key or value are not JSON serializable
+        '''
         self._data[key] = value # Set the key
 
         # Check if key and value can be put in JSON
-        if not is_serializable(key):
+        if not _is_serializable(key):
             raise ValueError('%s is not JSON serializable' % (key,))
-        if not is_serializable(value):
+        if not _is_serializable(value):
             raise ValueError('%s is not JSON serializable' % (value,))    
         self._do_auto_flush()
         return (key, value)
     
     def delete(self, key):
+        '''Deletes value. Will automatically flush if auto_flush is True and file_path is not None'''
         del self._data[key]
         self._do_auto_flush()
 
     def refresh(self):
-        '''Refresh data and then mark time read'''
+        '''Refresh data and then mark time read. Can be manually called'''
         try:
             self._data = json.loads(DeadSimpleKV._read_in(self.file_path))
         except FileNotFoundError:
@@ -76,16 +81,21 @@ class DeadSimpleKV:
         self._last_refresh = DeadSimpleKV._get_epoch()
 
     def flush(self):
-        '''Write out then mark time flushed'''
+        '''Write out then mark time flushed. Can be manually called'''
         DeadSimpleKV._write_out(self.file_path, json.dumps(self._data))
         self._last_flush = DeadSimpleKV._get_epoch()
     
     def _do_auto_flush(self):
         if self.flush_seconds is not None and self.file_path is not None:
             # flush if automatic and it is time to do so
-            temp_time = DeadSimpleKV._get_epoch()
-            if temp_time - self._last_flush >= self.flush_seconds:
+            if DeadSimpleKV._get_epoch() - self._last_flush >= self.flush_seconds:
                 self.flush()
+    
+    def _do_auto_refresh(self):
+        if self.refresh_seconds is not None and self.file_path is not None:
+            # refresh if automatic and time to do so
+            if DeadSimpleKV._get_epoch() - self._last_refresh >= self.refresh_seconds:
+                self.refresh()
 
     @staticmethod
     def _get_epoch():
