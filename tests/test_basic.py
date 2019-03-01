@@ -37,6 +37,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(kv.get('my_key'), 'test')
     
     def test_delete(self):
+        # test key deletion
         test_id = get_test_id()
         kv = deadsimplekv.DeadSimpleKV(get_test_id())
         kv.put('meme', 'doge')
@@ -44,6 +45,7 @@ class TestInit(unittest.TestCase):
         self.assertIsNone(kv.get('meme'))
 
     def test_manual_flush(self):
+        # test manual flushing
         test_id = get_test_id()
         kv = deadsimplekv.DeadSimpleKV(test_id, flush_seconds=None)
         kv.put('meme', 'doge')
@@ -51,6 +53,7 @@ class TestInit(unittest.TestCase):
         self.assertIsNone(kv2.get('meme'))
     
     def test_manual_refresh(self):
+        # Test manual refreshing
         test_id = get_test_id()        
         kv = deadsimplekv.DeadSimpleKV(test_id, refresh_seconds=None)
         kv2 = deadsimplekv.DeadSimpleKV(test_id)
