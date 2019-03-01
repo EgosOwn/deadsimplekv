@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-setup(name='deadsimplekv',
+setup(name='deadsimplekv-beardog',
       version='0.0.1',
       description='Very simple key-value store for Python',
       author='Kevin Froman',
