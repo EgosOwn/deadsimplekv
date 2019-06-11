@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
-import json, time, math, os
+import json, time, math, os, atexit
 
 def _is_serializable(data):
     '''
@@ -28,12 +28,12 @@ def _is_serializable(data):
         return False
 
 class DeadSimpleKV:
-    def __init__(self, file_path=None, refresh_seconds=0, flush_seconds=0):
+    def __init__(self, file_path=None, refresh_seconds=0, flush_seconds=0, flush_on_exit=True):
         '''
             Accepts a file path and refresh.
             If file_path is not set, no data will be written to disk.
             Refresh is an integer specifying how many seconds should pass before data is re-read from disk.
-            If refresh_seconds or flush_seconds are set to None they will not be done automatically
+            If refresh_seconds or flush_seconds are set to None they will not be done automatically (except where flush_on_exit applies)
         '''
         temp_time = DeadSimpleKV._get_epoch() # Initialization time
         self.file_path = file_path # The file path where we write our data in JSON format
@@ -48,6 +48,9 @@ class DeadSimpleKV:
                 self.refresh()
         except TypeError:
             pass
+        
+        if flush_on_exit:
+            atexit.register(self.flush)
     
     def get(self, key):
         '''

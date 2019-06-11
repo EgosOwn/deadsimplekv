@@ -10,7 +10,7 @@ It doesn't do anything crazy. It just takes json serializable data and stores it
 
 You can control when and where to read/write, and that's it.
 
-No bloat, only 3 public methods.
+No bloat, only 5 public methods.
 
 ## Usage
 
@@ -43,4 +43,4 @@ kv.get('my_key') # returns True.
 kv.delete('my_key')
 ~~~
 
-***Warning:*** **Be sure to manually flush when destroying the kv instance (such as by exiting your program) to avoid losing data, as flushes only happen when .put has been called.**
+***Warning:*** **Be sure to keep flush_on_exit set to true or manually flush when destroying the kv instance (such as by exiting your program) to avoid losing data.**

@@ -23,6 +23,7 @@ def get_test_id():
     return str(uuid.uuid4()) + '.dat'
 
 class TestInit(unittest.TestCase):
+
     def test_init(self):
         kv = deadsimplekv.DeadSimpleKV(get_test_id())
     
