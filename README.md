@@ -44,3 +44,5 @@ kv.delete('my_key')
 ~~~
 
 ***Warning:*** **Be sure to keep flush_on_exit set to true or manually flush when destroying the kv instance (such as by exiting your program) to avoid losing data.**
+
+***Warning:*** **flush_on_exit should be set to false when using the same file from multiple threads or processes, otherwise you will lose data.**
