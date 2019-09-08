@@ -2,6 +2,10 @@
 
 This project uses Semantic Versioning
 
+## 0.2.0
+
+Added automatic creation of path for file writing
+
 ## 0.1.1
 
 Added:

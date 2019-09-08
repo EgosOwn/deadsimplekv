@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='deadsimplekv',
-      version='0.1.1',
+      version='0.2.0',
       description='Very simple key-value store for Python',
       author='Kevin Froman',
       author_email='beardog@mailbox.org',

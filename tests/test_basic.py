@@ -70,7 +70,7 @@ class TestInit(unittest.TestCase):
         self.assertIsNone(kv.get('my_key'))
     
     def test_invalid(self):
-        kv = deadsimplekv.DeadSimpleKV(get_test_id())
+        kv = deadsimplekv.DeadSimpleKV(get_test_id(), flush_on_exit=False)
         try:
             kv.put('rekt', b'bits')
         except ValueError:
@@ -95,6 +95,19 @@ class TestInit(unittest.TestCase):
             test_data = json.loads(test_file.read())
         
         self.assertEqual(test_data['my_key'], 'test')
+    
+    def test_flush_no_path(self):
+        # assert data gets flushed when the path is not made yet
+
+        test_id = "my_test_dir/my_second_dir/" + get_test_id()
+
+        kv = deadsimplekv.DeadSimpleKV(test_id)
+        kv.put('my_key', 'test2')
+
+        with open(test_id, 'r') as test_file:
+            test_data = json.loads(test_file.read())
+        
+        self.assertEqual(test_data['my_key'], 'test2')
     
     def test_time(self):
         self.assertEqual(deadsimplekv.DeadSimpleKV._get_epoch(), math.floor(time.time()))

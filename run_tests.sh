@@ -11,3 +11,4 @@ for f in tests/*.py; do
 done
 echo "ran $ran test files successfully in $SECONDS seconds"
 rm *.dat
+rm -rf my_test_dir
