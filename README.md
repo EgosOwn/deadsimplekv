@@ -10,7 +10,7 @@ It doesn't do anything crazy. It just takes json serializable data and stores it
 
 You can control when and where to read/write, and that's it.
 
-No bloat, only 5 public methods.
+No bloat, only 6 public methods.
 
 ## Usage
 
