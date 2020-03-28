@@ -26,17 +26,27 @@ class TestInit(unittest.TestCase):
 
     def test_init(self):
         kv = deadsimplekv.DeadSimpleKV(get_test_id())
-    
+
     def test_get(self):
         test_id = get_test_id()
 
         with open(test_id , 'w') as test_file:
             test_file.write('{"my_key": "test"}')
-        
+
         # assert we can get written data
         kv = deadsimplekv.DeadSimpleKV(test_id)
         self.assertEqual(kv.get('my_key'), 'test')
-    
+
+    def test_get_raw_json(self):
+        test_id = get_test_id()
+
+        with open(test_id , 'w') as test_file:
+            test_file.write('{"my_key": "test"}')
+
+        # assert we can get written data
+        kv = deadsimplekv.DeadSimpleKV(test_id)
+        self.assertEqual(kv.get_raw_json(), '{"my_key": "test"}')
+
     def test_delete(self):
         # test key deletion
         test_id = get_test_id()
@@ -52,10 +62,10 @@ class TestInit(unittest.TestCase):
         kv.put('meme', 'doge')
         kv2 = deadsimplekv.DeadSimpleKV(test_id)
         self.assertIsNone(kv2.get('meme'))
-    
+
     def test_manual_refresh(self):
         # Test manual refreshing
-        test_id = get_test_id()        
+        test_id = get_test_id()
         kv = deadsimplekv.DeadSimpleKV(test_id, refresh_seconds=None)
         kv2 = deadsimplekv.DeadSimpleKV(test_id)
 
@@ -68,7 +78,7 @@ class TestInit(unittest.TestCase):
         kv = deadsimplekv.DeadSimpleKV(get_test_id())
         # assert non existant value returns none
         self.assertIsNone(kv.get('my_key'))
-    
+
     def test_invalid(self):
         kv = deadsimplekv.DeadSimpleKV(get_test_id(), flush_on_exit=False)
         try:
@@ -83,7 +93,7 @@ class TestInit(unittest.TestCase):
             pass
         else:
             self.fail()
-        
+
     def test_put(self):
         # Assert data gets written successfully as json
         test_id = get_test_id()
@@ -93,9 +103,9 @@ class TestInit(unittest.TestCase):
 
         with open(test_id, 'r') as test_file:
             test_data = json.loads(test_file.read())
-        
+
         self.assertEqual(test_data['my_key'], 'test')
-    
+
     def test_flush_no_path(self):
         # assert data gets flushed when the path is not made yet
 
@@ -106,9 +116,9 @@ class TestInit(unittest.TestCase):
 
         with open(test_id, 'r') as test_file:
             test_data = json.loads(test_file.read())
-        
+
         self.assertEqual(test_data['my_key'], 'test2')
-    
+
     def test_time(self):
         self.assertEqual(deadsimplekv.DeadSimpleKV._get_epoch(), math.floor(time.time()))
 
