@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='deadsimplekv',
-      version='0.3.0',
+      version='0.3.1',
       description='Very simple key-value store for Python',
       author='Kevin Froman',
       author_email='beardog@mailbox.org',

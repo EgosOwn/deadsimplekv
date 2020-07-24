@@ -47,7 +47,7 @@ class DeadSimpleKV:
         self._last_refresh = temp_time  # time last refreshed from disk
         self._last_flush = temp_time  # time last flushed to disk
 
-        if not file_path is None:
+        if file_path is not None:
             abs_path = os.path.dirname(os.path.abspath(file_path))
             if not os.path.exists(abs_path):
                 os.makedirs(abs_path)
@@ -58,7 +58,7 @@ class DeadSimpleKV:
         except TypeError:
             pass
 
-        if flush_on_exit:
+        if flush_on_exit and file_path:
             atexit.register(self.flush)
 
     def get(self, key):
